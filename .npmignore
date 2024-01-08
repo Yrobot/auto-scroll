@@ -1,0 +1,28 @@
+.*.swp
+._*
+.DS_Store
+.git
+.gitignore
+.hg
+.npmignore
+.npmrc
+.lock-wscript
+.svn
+.wafpickle-*
+config.gypi
+CVS
+npm-debug.log
+
+## project files
+.github
+package
+website
+node_modules
+index.html
+vite.config.ts
+yarn.lock
+tsconfig.json
+.releaserc.cjs
+
+## build
+build_website
