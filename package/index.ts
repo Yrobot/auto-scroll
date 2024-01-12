@@ -57,7 +57,6 @@ function autoScroll({
   const [scrollHook] = throttle(() => {
     if (escapeHook(container)) return false;
     container.scrollTop = container.scrollHeight + offset;
-    console.log("scrollHook is triggered");
     return true;
   }, throttleTime);
 
