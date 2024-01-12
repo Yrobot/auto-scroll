@@ -26,21 +26,17 @@ const throttle = <R, A extends any[]>(
 };
 
 /**
- * @description
- * @author Yrobot
- * @date 08/01/2024
- * @param {{
- *   selector: string;
- *   escapeHook?: (elm: Element) => boolean;
- *   throttleTime?: number;
- *   offset?: number;
- * }} {
- *   selector,
- *   escapeHook = (elm) => false,
- *   throttleTime = 100,
- *   offset = 0,
- * }
- * @return {*}  {unObserverCallback}
+ * @description auto scroll the selector dom to the bottom, when the size of the selector dom has been updated.
+ * @author Yrobot <https://yrobot.top>
+ * @date 12/01/2024
+ *
+ * @param {Object} options - The config options for the autoScroll function.
+ * @param {string} [options.selector] - The selector for the container element. (example: '#container')
+ * @param {EscapeHook} [options.escapeHook] - A function that determines whether scrolling should be escaped.
+ * @param {number} [options.throttleTime] - The throttle time in milliseconds.
+ * @param {number} [options.offset] - The offset for the scroll position based on the container.scrollHeight.
+ *
+ * @return {function} The unObserverCallback function.
  */
 function autoScroll({
   selector,

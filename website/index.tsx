@@ -19,7 +19,7 @@ function App() {
       clearInterval(timeId);
     };
   }, []);
-  // useEffect(() => autoScroll({ selector: "#list-container" }), []);
+  useEffect(() => autoScroll({ selector: "#list-container" }), []);
   return (
     <div className="panel">
       <div className="list-container" id="list-container">

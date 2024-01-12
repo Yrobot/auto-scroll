@@ -8,7 +8,7 @@
   <a href="https://github.com/Yrobot/auto-scroll">@yrobot/auto-scroll</a>
 </h2>
 <p align="center">
-  A web component which load static svg file form uri to inline svg
+ This is a tool which makes scroll-container auto scroll to the bottom easy.
 </p>
 <p align="center">
   <a href="https://www.npmjs.com/package/@yrobot/auto-scroll"><img src="https://img.shields.io/npm/v/@yrobot/auto-scroll.svg" alt="npm package"></a>
@@ -25,15 +25,15 @@ yarn add @yrobot/auto-scroll
 
 ```ts
 import autoScroll from "@yrobot/auto-scroll";
-autoScroll("#scroll-container-id");
+autoScroll({ selector: "#scroll-container-id" });
 ```
 
 ## script
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@yrobot/auto-scroll"></script>
+<script src="https://cdn.jsdelivr.net/npm/@yrobot/auto-scroll/build/index.iife.js"></script>
 <script>
-  autoScroll("#scroll-container-id");
+  autoScroll({ selector: "#scroll-container-id" });
 </script>
 ```
 
