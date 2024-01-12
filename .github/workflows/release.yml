@@ -6,8 +6,7 @@ on:
       - release
 jobs:
   github-npm_release:
-    name: Github Release
-    needs: docker_release
+    name: Github & NPM Release
     runs-on: ubuntu-latest
     permissions:
       contents: write # to be able to publish a GitHub release
