@@ -11,14 +11,7 @@ module.exports = {
     [
       "@semantic-release/github",
       {
-        assets: [
-          { path: "build/index.es.js", label: "" },
-          { path: "build/index.d.ts", label: "" },
-          { path: "build/index.iife.js", label: "" },
-          { path: "package.json", label: "" },
-          { path: "README.md", label: "" },
-          { path: "LICENSE", label: "" },
-        ],
+        assets: ["build", "package.json", "README.md", "LICENSE"],
       },
     ],
   ],
