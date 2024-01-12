@@ -1,6 +1,7 @@
 {
   "name": "@yrobot/auto-scroll",
   "version": "1.0.0",
+  "homepage": "https://github.com/Yrobot/auto-scroll",
   "description": "This is a tool which makes scroll-container auto scroll to the bottom easy.",
   "main": "build/index.es.js",
   "module": "build/index.es.js",
