@@ -23,6 +23,7 @@ vite.config.ts
 yarn.lock
 tsconfig.json
 .releaserc.cjs
+CHANGELOG.md
 
 ## build
 build_website
