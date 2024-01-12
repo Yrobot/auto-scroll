@@ -2,9 +2,9 @@
   "name": "@yrobot/auto-scroll",
   "version": "1.0.0",
   "description": "This is a tool which makes scroll-container auto scroll to the bottom easy.",
-  "main": "build/index.js",
-  "module": "build/index.js",
-  "types": "build/index.d.ts", 
+  "main": "build/index.es.js",
+  "module": "build/index.es.js",
+  "types": "build/index.d.ts",
   "scripts": {
     "dev": "type=WEBSITE vite --port 3001",
     "build": "yarn clean & yarn build:package",
@@ -30,5 +30,9 @@
     "typescript": "^5.3.3",
     "vite": "^5.0.11",
     "vite-plugin-dts": "^3.7.0"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "tag": "latest"
   }
 }
