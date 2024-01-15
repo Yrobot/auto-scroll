@@ -5,6 +5,20 @@ on:
     branches:
       - release
 jobs:
+  github-pages_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install & Build
+        run: |
+          yarn
+          yarn build:website
+      - name: Deploy to Github Page
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build_website
+
   github-npm_release:
     name: Github & NPM Release
     runs-on: ubuntu-latest
