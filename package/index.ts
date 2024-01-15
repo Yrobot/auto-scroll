@@ -25,28 +25,68 @@ const throttle = <R, A extends any[]>(
   ];
 };
 
+type OnUnmount = (elm: Element) => void;
+
+export type Context = {
+  escapeHook?: (elm: Element) => boolean;
+  onMount?: (elm: Element) => void | OnUnmount;
+  onUnmount?: OnUnmount;
+};
+
+/**
+ * Generates the context for escaping auto scroll down when user scroll up.
+ *
+ * @param {Object} config - The configs.
+ * @param {number} [config.threshold=24] - The threshold value for scroll up distance (default: 24).
+ * @param {number} [config.throttleTime=100] - The throttle time for scroll event (default: 100).
+ *
+ * @returns {Context} The generated context object. For autoScroll.param.context
+ */
+export function generateEscapeScrollUpContext({
+  threshold = 24,
+  throttleTime = 100,
+}: { threshold?: number; throttleTime?: number } = {}) {
+  const context: Context = {};
+  let isEscape = false;
+  const [onScroll] = throttle((evt: Event) => {
+    const target = evt.target as Element;
+    const scrollUpDistance =
+      target.scrollHeight - target.scrollTop - target.clientHeight;
+    isEscape = scrollUpDistance > threshold;
+  }, throttleTime);
+  context.onMount = (elm) => {
+    elm.addEventListener("scroll", onScroll);
+  };
+  context.onUnmount = (elm) => {
+    elm.removeEventListener("scroll", onScroll);
+  };
+  context.escapeHook = () => isEscape;
+  return context;
+}
+
 /**
  * @description auto scroll the selector dom to the bottom, when the size of the selector dom has been updated.
- * @author Yrobot <https://yrobot.top>
- * @date 12/01/2024
  *
  * @param {Object} options - The config options for the autoScroll function.
- * @param {string} [options.selector] - The selector for the container element. (example: '#container')
- * @param {EscapeHook} [options.escapeHook] - A function that determines whether scrolling should be escaped.
- * @param {number} [options.throttleTime] - The throttle time in milliseconds.
- * @param {number} [options.offset] - The offset for the scroll position based on the container.scrollHeight.
+ * @param {string} options.selector - The selector for the container element. (example: '#container')
+ * @param {Context} [options.context] - The context for the life cycle hooks of the autoScroll function. [escapeHook,onMount,onUnmount]
+ * @param {number} [options.throttleTime=100] - The throttle time in milliseconds.
+ * @param {number} [options.offset=0] - The offset for the scroll position based on the container.scrollHeight.
  *
  * @return {function} The unObserverCallback function.
+ *
+ * @example autoScroll({ selector: "#scroll-container-id" })
+ * @example autoScroll({ selector: "#scroll-container-id", context: generateEscapeScrollUpContext() })
  */
-function autoScroll({
+export default function autoScroll({
   selector,
-  escapeHook = (elm) => false,
   throttleTime = 100,
+  context,
   offset = 0,
 }: {
   selector: string;
-  escapeHook?: (elm: Element) => boolean;
   throttleTime?: number;
+  context?: Context;
   offset?: number;
 }): unObserverCallback {
   const container = document.querySelector(selector);
@@ -54,8 +94,14 @@ function autoScroll({
   if (container === null)
     throw new Error(`Element not found with selector [${selector}]`);
 
+  const returnOnUnmount = context?.onMount?.(container);
+
   const [scrollHook] = throttle(() => {
-    if (escapeHook(container)) return false;
+    if (
+      typeof context?.escapeHook === "function" &&
+      context.escapeHook(container)
+    )
+      return false;
     container.scrollTop = container.scrollHeight + offset;
     return true;
   }, throttleTime);
@@ -81,7 +127,8 @@ function autoScroll({
   return () => {
     resizeObserver.disconnect();
     mutationObserver.disconnect();
+    // unmount
+    returnOnUnmount?.(container);
+    context?.onUnmount?.(container);
   };
 }
-
-export default autoScroll;

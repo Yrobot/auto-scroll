@@ -28,12 +28,12 @@ import autoScroll from "@yrobot/auto-scroll";
 autoScroll({ selector: "#scroll-container-id" });
 ```
 
-## script
+## script - iife
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@yrobot/auto-scroll/build/index.iife.js"></script>
 <script>
-  autoScroll({ selector: "#scroll-container-id" });
+  autoScroll.default({ selector: "#scroll-container-id" });
 </script>
 ```
 
@@ -43,3 +43,27 @@ autoScroll({ selector: "#scroll-container-id" });
 
 - [✓] The subtree children list length increase
 - [✓] The direct child element height increase
+
+## Pack Up Useful Utilities Logic
+
+### Stop auto scroll when user scroll up
+
+> es
+
+```ts
+import autoScroll, { generateEscapeScrollUpContext } from "@yrobot/auto-scroll";
+
+autoScroll({
+  selector: "#scroll-container-id",
+  context: generateEscapeScrollUpContext(),
+});
+```
+
+> iife
+
+```ts
+autoScroll.default({
+  selector: "#scroll-container-id",
+  context: autoScroll.generateEscapeScrollUpContext(),
+});
+```
