@@ -102,7 +102,10 @@ export default function autoScroll({
       context.escapeHook(container)
     )
       return false;
-    container.scrollTop = container.scrollHeight + offset;
+    // use requestAnimationFrame for escape ResizeObserver loop
+    requestAnimationFrame(() => {
+      container.scrollTop = container.scrollHeight + offset;
+    });
     return true;
   }, throttleTime);
 
