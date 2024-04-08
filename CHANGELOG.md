@@ -1,3 +1,15 @@
+# [3.0.0](https://github.com/Yrobot/auto-scroll/compare/v2.0.1...v3.0.0) (2024-04-08)
+
+
+### Code Refactoring
+
+* use plugins for custom logic ([26ebd24](https://github.com/Yrobot/auto-scroll/commit/26ebd2448c3f78a893054f8e081b6115eef9dae6))
+
+
+### BREAKING CHANGES
+
+* use escapeWhenUpPlugin instand of generateEscapeScrollUpContext to handle Stop auto scroll when user scroll up.
+
 ## [2.0.1](https://github.com/Yrobot/auto-scroll/compare/v2.0.0...v2.0.1) (2024-04-08)
 
 
