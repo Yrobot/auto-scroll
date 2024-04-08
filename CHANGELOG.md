@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/Yrobot/auto-scroll/compare/v2.0.0...v2.0.1) (2024-04-08)
+
+
+### Bug Fixes
+
+* ResizeObserver loop completed with undelivered notifications. ([93354f0](https://github.com/Yrobot/auto-scroll/commit/93354f0b15b7574cb62d9914d6480abbb14dded6))
+
 # [2.0.0](https://github.com/Yrobot/auto-scroll/compare/v1.0.1...v2.0.0) (2024-01-15)
 
 
