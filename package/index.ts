@@ -36,13 +36,13 @@ export type Context = {
 export type Plugin<T = unknown> = (config?: T) => Context;
 
 /**
- * Generates the context for escaping auto scroll down when user scroll up.
+ * the auto-scroll plugin for escaping auto scroll down when user scroll up.
  *
  * @param {Object} config - The configs.
  * @param {number} [config.threshold=24] - The threshold value for scroll up distance (default: 24).
  * @param {number} [config.throttleTime=100] - The throttle time for scroll event (default: 100).
  *
- * @returns {Context} The generated context object. For autoScroll.param.context
+ * @returns {Context} The generated state object. For autoScroll.param.plugins
  */
 export const escapeWhenUpPlugin: Plugin<{
   threshold?: number;
