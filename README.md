@@ -51,11 +51,11 @@ autoScroll({ selector: "#scroll-container-id" });
 > es
 
 ```ts
-import autoScroll, { generateEscapeScrollUpContext } from "@yrobot/auto-scroll";
+import autoScroll, { escapeWhenUpPlugin } from "@yrobot/auto-scroll";
 
 autoScroll({
   selector: "#scroll-container-id",
-  context: generateEscapeScrollUpContext(),
+  plugins: [escapeWhenUpPlugin()],
 });
 ```
 
@@ -64,6 +64,20 @@ autoScroll({
 ```ts
 autoScroll.default({
   selector: "#scroll-container-id",
-  context: autoScroll.generateEscapeScrollUpContext(),
+  plugins: [autoScroll.escapeWhenUpPlugin()],
 });
 ```
+
+<!-- ## Customize plugins
+
+```ts
+import type { Plugin } from "@yrobot/auto-scroll";
+
+const myPlugin: Plugin<{ name: string }> = ({ name }) => ({
+  escapeHook: (elm) => true,
+  onMount: (elm) => () => {},
+  onUnmount: (elm) => {},
+});
+```
+
+the plugin should return the an object includes `escapeHook`, `onMount`, `onUnmount` functions. -->

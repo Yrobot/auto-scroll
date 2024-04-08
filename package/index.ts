@@ -33,6 +33,8 @@ export type Context = {
   onUnmount?: OnUnmount;
 };
 
+export type Plugin<T = unknown> = (config?: T) => Context;
+
 /**
  * Generates the context for escaping auto scroll down when user scroll up.
  *
@@ -42,10 +44,10 @@ export type Context = {
  *
  * @returns {Context} The generated context object. For autoScroll.param.context
  */
-export function generateEscapeScrollUpContext({
-  threshold = 24,
-  throttleTime = 100,
-}: { threshold?: number; throttleTime?: number } = {}) {
+export const escapeWhenUpPlugin: Plugin<{
+  threshold?: number;
+  throttleTime?: number;
+}> = ({ threshold = 24, throttleTime = 100 } = {}) => {
   const context: Context = {};
   let isEscape = false;
   const [onScroll] = throttle((evt: Event) => {
@@ -62,31 +64,31 @@ export function generateEscapeScrollUpContext({
   };
   context.escapeHook = () => isEscape;
   return context;
-}
+};
 
 /**
  * @description auto scroll the selector dom to the bottom, when the size of the selector dom has been updated.
  *
  * @param {Object} options - The config options for the autoScroll function.
  * @param {string} options.selector - The selector for the container element. (example: '#container')
- * @param {Context} [options.context] - The context for the life cycle hooks of the autoScroll function. [escapeHook,onMount,onUnmount]
+ * @param {Context[]} [options.plugins] - The plugins for the life cycle hooks of the autoScroll function. [escapeHook,onMount,onUnmount]
  * @param {number} [options.throttleTime=100] - The throttle time in milliseconds.
  * @param {number} [options.offset=0] - The offset for the scroll position based on the container.scrollHeight.
  *
  * @return {function} The unObserverCallback function.
  *
  * @example autoScroll({ selector: "#scroll-container-id" })
- * @example autoScroll({ selector: "#scroll-container-id", context: generateEscapeScrollUpContext() })
+ * @example autoScroll({ selector: "#scroll-container-id", plugins: [escapeWhenUpPlugin()] })
  */
 export default function autoScroll({
   selector,
   throttleTime = 100,
-  context,
+  plugins = [],
   offset = 0,
 }: {
   selector: string;
   throttleTime?: number;
-  context?: Context;
+  plugins?: ReturnType<Plugin>[];
   offset?: number;
 }): unObserverCallback {
   const container = document.querySelector(selector);
@@ -94,13 +96,14 @@ export default function autoScroll({
   if (container === null)
     throw new Error(`Element not found with selector [${selector}]`);
 
-  const returnOnUnmount = context?.onMount?.(container);
+  // plugins onMount
+  const mountReturnFuncList = plugins
+    .map((plugin) => plugin?.onMount?.(container))
+    .filter((result) => typeof result === "function") as OnUnmount[];
 
+  // main auto down scroll hook
   const [scrollHook] = throttle(() => {
-    if (
-      typeof context?.escapeHook === "function" &&
-      context.escapeHook(container)
-    )
+    if (!!plugins.find((plugin) => plugin?.escapeHook?.(container) === true))
       return false;
     // use requestAnimationFrame for escape ResizeObserver loop
     requestAnimationFrame(() => {
@@ -109,10 +112,10 @@ export default function autoScroll({
     return true;
   }, throttleTime);
 
+  // observers
   const resizeObserver = new ResizeObserver(() => {
     scrollHook();
   });
-
   const mutationObserver = new MutationObserver(() => {
     scrollHook();
   });
@@ -127,11 +130,12 @@ export default function autoScroll({
     subtree: true,
     childList: true,
   });
+
+  // unmount
   return () => {
     resizeObserver.disconnect();
     mutationObserver.disconnect();
-    // unmount
-    returnOnUnmount?.(container);
-    context?.onUnmount?.(container);
+    mountReturnFuncList.forEach((func) => func(container));
+    plugins.forEach((plugin) => plugin?.onUnmount?.(container));
   };
 }
