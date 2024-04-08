@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 
-import autoScroll, { generateEscapeScrollUpContext } from "../package/index.ts";
+import autoScroll, { escapeWhenUpPlugin } from "../package/index.ts";
 
 import "./index.css";
 
@@ -32,11 +32,11 @@ import autoScroll from "@yrobot/auto-scroll";
 
 autoScroll({ selector: "#scroll-container-id" });`,
   escapeScrollUp: `
-import autoScroll, { generateEscapeScrollUpContext } from "@yrobot/auto-scroll";
+import autoScroll, { escapeWhenUpPlugin } from "@yrobot/auto-scroll";
 
 autoScroll({
   selector: "#scroll-container-id",
-  context: generateEscapeScrollUpContext(),
+  plugins: [escapeWhenUpPlugin()],
 });`,
 };
 
@@ -86,7 +86,7 @@ const EscapeScrollUpDemo = () => {
     () =>
       autoScroll({
         selector: "#escape-scroll-up-list-container",
-        context: generateEscapeScrollUpContext(),
+        plugins: [escapeWhenUpPlugin()],
       }),
     []
   );
