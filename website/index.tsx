@@ -5,6 +5,13 @@ import autoScroll, { escapeWhenUpPlugin } from "../package/index.ts";
 
 import "./index.css";
 
+const Phone = ({ children }) => (
+  <div className="mockup-phone">
+    <div className="camera"></div>
+    <div className="display bg-base-200">{children}</div>
+  </div>
+);
+
 const useDynamicList = ({ max = 999 }: { max?: number } = {}) => {
   const [list, setList] = useState<number[]>([]);
   const dataRef = useRef({
@@ -27,12 +34,10 @@ const useDynamicList = ({ max = 999 }: { max?: number } = {}) => {
 };
 
 const codes = {
-  default: `
-import autoScroll from "@yrobot/auto-scroll";
+  default: `import autoScroll from "@yrobot/auto-scroll";
 
 autoScroll({ selector: "#scroll-container-id" });`,
-  escapeScrollUp: `
-import autoScroll, { escapeWhenUpPlugin } from "@yrobot/auto-scroll";
+  escapeScrollUp: `import autoScroll, { escapeWhenUpPlugin } from "@yrobot/auto-scroll";
 
 autoScroll({
   selector: "#scroll-container-id",
@@ -52,30 +57,21 @@ const DefaultDemo = () => {
   return (
     <div className="panel">
       <h3>Default (auto scroll always)</h3>
-      <div className="list-container" id="default-list-container">
-        {list.map((id) => (
-          <div className="item" key={id}>
-            {id}
-          </div>
-        ))}
-        {/* <div>
+      <Phone>
+        <div className="list-container" id="default-list-container">
           {list.map((id) => (
             <div className="item" key={id}>
               {id}
             </div>
           ))}
-        </div> */}
-        {/* <div
-          className="item"
-          style={{
-            height: list.length * 100,
-          }}
-        >
-          Height Update [{list.length * 100}px]
-        </div> */}
-        <div className="loading">LOADING...</div>
+          <div className="loading">LOADING...</div>
+        </div>
+      </Phone>
+      <div className="code-block mt-4">
+        <pre>
+          <code>{codes.default}</code>
+        </pre>
       </div>
-      <code>{codes.default}</code>
     </div>
   );
 };
@@ -93,15 +89,21 @@ const EscapeScrollUpDemo = () => {
   return (
     <div className="panel">
       <h3>Stop Auto Scroll When User Scroll Up</h3>
-      <div className="list-container" id="escape-scroll-up-list-container">
-        {list.map((id) => (
-          <div className="item" key={id}>
-            {id}
-          </div>
-        ))}
-        <div className="loading">LOADING...</div>
+      <Phone>
+        <div className="list-container" id="escape-scroll-up-list-container">
+          {list.map((id) => (
+            <div className="item" key={id}>
+              {id}
+            </div>
+          ))}
+          <div className="loading">LOADING...</div>
+        </div>
+      </Phone>
+      <div className="code-block mt-4">
+        <pre>
+          <code>{codes.escapeScrollUp}</code>
+        </pre>
       </div>
-      <code>{codes.escapeScrollUp}</code>
     </div>
   );
 };

@@ -6,22 +6,32 @@
   body {
     @apply flex justify-center items-start m-0 p-0;
   }
-  code {
-    @apply whitespace-pre-wrap;
+  h3 {
+    @apply my-4 font-bold;
   }
 }
 
 @layer components {
   .panel {
-    @apply w-[400px];
+    @apply w-[400px] flex flex-col items-center justify-start;
   }
   .list-container {
-    @apply box-border border w-full h-[600px] overflow-scroll flex flex-col justify-start gap-4 p-2 border-solid border-black;
+    @apply box-border border h-[600px] overflow-scroll flex flex-col justify-start gap-4 p-2 border-solid border-black pt-6 w-80;
   }
   .item {
     @apply flex-none w-full h-[100px] flex justify-center items-center bg-[black] text-white rounded-lg;
   }
   .grid-table {
     @apply grid grid-cols-[1fr_1fr] gap-16;
+  }
+  .code-block {
+    @apply p-3 rounded-lg;
+    --tw-bg-opacity: 1;
+    background-color: var(--fallback-n, oklch(var(--n) / var(--tw-bg-opacity)));
+    --tw-text-opacity: 1;
+    color: var(--fallback-nc, oklch(var(--nc) / var(--tw-text-opacity)));
+  }
+  .code-block code {
+    @apply whitespace-pre-wrap;
   }
 }
