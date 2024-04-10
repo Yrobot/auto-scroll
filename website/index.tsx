@@ -41,11 +41,16 @@ const mockData = [
     message:
       "Ah I see, that's a common issue with building chat/dialogue interfaces. Automatically scrolling to the latest message in the conversation is an important feature for providing a smooth and intuitive user experience. You can use the `@yrobot/auto-scroll` plugin, which can help you solve this problem very well, and it is developed using native js and adapts to all frameworks.",
   },
-  ...[...Array(99)].map((_, i) => ({
+  ...[...Array(50)].map((_, i) => ({
     from: Type.AI,
     id: `00${5 + i}`,
     message: "Let's GOGOGOGOGOGOGOGOGO!!!",
   })),
+  {
+    from: Type.User,
+    id: "999",
+    message: "Ok, I will try it out. Thank you for your help!",
+  },
 ];
 
 type ChatList = typeof mockData;
@@ -91,9 +96,10 @@ const dynamicRun = ({
 
 const defaultList = mockData.filter((item, i) => i < 3);
 
-const useChatListStream = (): ChatList => {
+const useChatListStream = (): { list: ChatList; done: boolean } => {
   const range = [6, 16];
   const [list, setList] = useState<ChatList>(defaultList);
+  const [done, setDone] = useState<boolean>(false);
   useEffect(() => {
     let offset = defaultList.reduce(
       (acc, item) => acc + item.message.length,
@@ -108,14 +114,21 @@ const useChatListStream = (): ChatList => {
         offset += step;
         const list = getMock(offset);
         setList(list);
-        if (offset >= end) stop();
+        if (offset >= end) {
+          setDone(true);
+          stop();
+        }
       },
     });
   }, []);
-  return list;
+  return { list, done };
 };
 
-const ChatList = ({ list }: { list: ChatList }) => (
+const ChatList = ({
+  data: { list, done },
+}: {
+  data: ReturnType<typeof useChatListStream>;
+}) => (
   <>
     {list.map((item) => (
       <div
@@ -125,6 +138,20 @@ const ChatList = ({ list }: { list: ChatList }) => (
         <div className="chat-bubble">{item.message}</div>
       </div>
     ))}
+    {done && (
+      <div className="chat chat-start">
+        <div className="chat-bubble chat-bubble-success">
+          <span
+            className="underline cursor-pointer"
+            onClick={() => {
+              window.location.reload();
+            }}
+          >
+            Click here to replay
+          </span>
+        </div>
+      </div>
+    )}
   </>
 );
 
@@ -140,12 +167,11 @@ autoScroll({
 });`,
 };
 
-const DefaultDemo = ({ list }) => {
+const DefaultDemo = ({ data }) => {
   useEffect(
     () =>
       autoScroll({
         selector: "#default-list-container",
-        // throttleTime: 100,
       }),
     []
   );
@@ -157,7 +183,7 @@ const DefaultDemo = ({ list }) => {
           className="list-container artboard phone-1"
           id="default-list-container"
         >
-          <ChatList list={list} />
+          <ChatList data={data} />
         </div>
       </Phone>
       <div className="code-block mt-4">
@@ -169,7 +195,7 @@ const DefaultDemo = ({ list }) => {
   );
 };
 
-const EscapeScrollUpDemo = ({ list }) => {
+const EscapeScrollUpDemo = ({ data }) => {
   useEffect(
     () =>
       autoScroll({
@@ -186,7 +212,7 @@ const EscapeScrollUpDemo = ({ list }) => {
           className="list-container artboard phone-1"
           id="escape-scroll-up-list-container"
         >
-          <ChatList list={list} />
+          <ChatList data={data} />
         </div>
       </Phone>
       <div className="code-block mt-4">
@@ -199,11 +225,11 @@ const EscapeScrollUpDemo = ({ list }) => {
 };
 
 function App() {
-  const list = useChatListStream();
+  const data = useChatListStream();
   return (
     <div className="grid-table">
-      <DefaultDemo list={list} />
-      <EscapeScrollUpDemo list={list}/>
+      <DefaultDemo data={data} />
+      <EscapeScrollUpDemo data={data} />
     </div>
   );
 }
