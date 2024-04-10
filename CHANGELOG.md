@@ -1,3 +1,12 @@
+## [3.0.1](https://github.com/Yrobot/auto-scroll/compare/v3.0.0...v3.0.1) (2024-04-10)
+
+
+### Bug Fixes
+
+* escapeWhenUpPlugin only escape when scroll up but based on the distance to bottom ([58ffd31](https://github.com/Yrobot/auto-scroll/commit/58ffd312ff8c14acdeac452e1e18de086751f643))
+* new add item should be observed ([6d7869c](https://github.com/Yrobot/auto-scroll/commit/6d7869c6602d594b77f4dea3e8ae51ec662c4d01))
+* throttle lost the last callback ([7f66ec7](https://github.com/Yrobot/auto-scroll/commit/7f66ec79996b83816cc00d2d8964f00cc5b5da0c))
+
 # [3.0.0](https://github.com/Yrobot/auto-scroll/compare/v2.0.1...v3.0.0) (2024-04-08)
 
 
