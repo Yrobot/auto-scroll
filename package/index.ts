@@ -1,22 +1,21 @@
 type unObserverCallback = () => void;
-
 const throttle = <R, A extends any[]>(
   fn: (...args: A) => R,
   delay: number
-): [(...args: A) => R | null, () => void] => {
-  let wait = false;
+): [(...args: A) => null, () => void] => {
+  let lastCall = -Infinity;
   let timeout: undefined | number;
   let cancelled = false;
   return [
     (...args: A) => {
       if (cancelled) return null;
-      if (wait) return null;
-      const val = fn(...args);
-      wait = true;
+      let wait = lastCall + delay - Date.now();
+      clearTimeout(timeout);
       timeout = window.setTimeout(() => {
-        wait = false;
-      }, delay);
-      return val;
+        lastCall = Date.now();
+        fn(...args);
+      }, Math.max(0, wait));
+      return null;
     },
     () => {
       cancelled = true;

@@ -73,7 +73,7 @@ const dynamicRun = ({
   i?: number;
 }) => {
   const randomTime = time[0] + Math.floor(Math.random() * (time[1] - time[0]));
-  console.log({ randomTime });
+  // console.log({ randomTime });
   const timeout = setTimeout(() => {
     i++;
     if (i > 999) return;
@@ -104,7 +104,7 @@ const useChatListStream = (): ChatList => {
       callback: ({ stop }) => {
         const step =
           range[0] + Math.floor(Math.random() * (range[1] - range[0]));
-        console.log({ step });
+        // console.log({ step });
         offset += step;
         const list = getMock(offset);
         setList(list);
@@ -145,6 +145,7 @@ const DefaultDemo = ({ list }) => {
     () =>
       autoScroll({
         selector: "#default-list-container",
+        // throttleTime: 100,
       }),
     []
   );
@@ -202,7 +203,7 @@ function App() {
   return (
     <div className="grid-table">
       <DefaultDemo list={list} />
-      {/* <EscapeScrollUpDemo list={list}/> */}
+      <EscapeScrollUpDemo list={list}/>
     </div>
   );
 }
