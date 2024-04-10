@@ -27,3 +27,9 @@ CHANGELOG.md
 
 ## build
 build_website
+
+## dev files
+.yarn
+.yarnrc.yml
+postcss.config.js
+tailwind.config.js

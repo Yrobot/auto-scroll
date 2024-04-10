@@ -5,34 +5,161 @@ import autoScroll, { escapeWhenUpPlugin } from "../package/index.ts";
 
 import "./index.css";
 
-const useDynamicList = ({ max = 999 }: { max?: number } = {}) => {
-  const [list, setList] = useState<number[]>([]);
-  const dataRef = useRef({
-    len: 0,
-    max,
+const Phone = ({ children }) => (
+  <div className="mockup-phone">
+    <div className="camera"></div>
+    <div className="display bg-base-200">{children}</div>
+  </div>
+);
+
+enum Type {
+  User = "USER",
+  AI = "AI",
+}
+
+const mockData = [
+  {
+    from: Type.User,
+    id: "001",
+    message: "Hello, I am building a website for AI dialogue",
+  },
+  {
+    from: Type.AI,
+    id: "002",
+    message:
+      "Okay, that sounds like an interesting project! What difficulties did you encounter in setting up the AI dialogue website?",
+  },
+  {
+    from: Type.User,
+    id: "003",
+    message:
+      "When I was building the conversation list, I found that the page would not automatically scroll to the latest position of the conversation. When I talk to the AI, a better experience is that the page can automatically scroll to the bottom so that I can view the latest news.",
+  },
+  {
+    from: Type.AI,
+    id: "004",
+    message:
+      "Ah I see, that's a common issue with building chat/dialogue interfaces. Automatically scrolling to the latest message in the conversation is an important feature for providing a smooth and intuitive user experience. You can use the `@yrobot/auto-scroll` plugin, which can help you solve this problem very well, and it is developed using native js and adapts to all frameworks.",
+  },
+  ...[...Array(50)].map((_, i) => ({
+    from: Type.AI,
+    id: `00${5 + i}`,
+    message: "Let's GOGOGOGOGOGOGOGOGO!!!",
+  })),
+  {
+    from: Type.User,
+    id: "999",
+    message: "Ok, I will try it out. Thank you for your help!",
+  },
+];
+
+type ChatList = typeof mockData;
+
+const getMock = (offset: number): ChatList => {
+  const result: ChatList = [];
+  let tempIndex = 0;
+  mockData.forEach((item) => {
+    if (tempIndex > offset) return;
+    result.push({
+      ...item,
+      message: item.message.slice(0, offset - tempIndex),
+    });
+    tempIndex += item.message.length;
   });
-  dataRef.current.len = list.length;
-  dataRef.current.max = max;
-  useEffect(() => {
-    const timeId = setInterval(() => {
-      if (dataRef.current.len < dataRef.current.max) {
-        setList((list) => [...list, list.length + 1]);
-      }
-    }, 200);
-    return () => {
-      clearInterval(timeId);
-    };
-  }, []);
-  return list;
+  return result;
 };
 
+const time = [20, 300];
+const dynamicRun = ({
+  callback,
+  i = 0,
+}: {
+  callback: (options: { stop: () => void }) => void;
+  i?: number;
+}) => {
+  const randomTime = time[0] + Math.floor(Math.random() * (time[1] - time[0]));
+  // console.log({ randomTime });
+  const timeout = setTimeout(() => {
+    i++;
+    if (i > 999) return;
+    const nextTimeout = dynamicRun({
+      callback,
+      i,
+    });
+    const stop = () => clearTimeout(nextTimeout);
+    callback({
+      stop,
+    });
+  }, randomTime);
+  return timeout;
+};
+
+const defaultList = mockData.filter((item, i) => i < 3);
+
+const useChatListStream = (): { list: ChatList; done: boolean } => {
+  const range = [6, 16];
+  const [list, setList] = useState<ChatList>(defaultList);
+  const [done, setDone] = useState<boolean>(false);
+  useEffect(() => {
+    let offset = defaultList.reduce(
+      (acc, item) => acc + item.message.length,
+      0
+    );
+    const end = mockData.reduce((acc, item) => acc + item.message.length, 0);
+    dynamicRun({
+      callback: ({ stop }) => {
+        const step =
+          range[0] + Math.floor(Math.random() * (range[1] - range[0]));
+        // console.log({ step });
+        offset += step;
+        const list = getMock(offset);
+        setList(list);
+        if (offset >= end) {
+          setDone(true);
+          stop();
+        }
+      },
+    });
+  }, []);
+  return { list, done };
+};
+
+const ChatList = ({
+  data: { list, done },
+}: {
+  data: ReturnType<typeof useChatListStream>;
+}) => (
+  <>
+    {list.map((item) => (
+      <div
+        className={`chat ${item.from === Type.AI ? "chat-start" : "chat-end"}`}
+        key={item.id}
+      >
+        <div className="chat-bubble">{item.message}</div>
+      </div>
+    ))}
+    {done && (
+      <div className="chat chat-start">
+        <div className="chat-bubble chat-bubble-success">
+          <span
+            className="underline cursor-pointer"
+            onClick={() => {
+              window.location.reload();
+            }}
+          >
+            Click here to replay
+          </span>
+        </div>
+      </div>
+    )}
+  </>
+);
+
 const codes = {
-  default: `
-import autoScroll from "@yrobot/auto-scroll";
+  default: `import autoScroll from "@yrobot/auto-scroll";
 
 autoScroll({ selector: "#scroll-container-id" });`,
-  escapeScrollUp: `
-import autoScroll, { escapeWhenUpPlugin } from "@yrobot/auto-scroll";
+  escapeScrollUp: `import autoScroll, { escapeWhenUpPlugin } from "@yrobot/auto-scroll";
 
 autoScroll({
   selector: "#scroll-container-id",
@@ -40,8 +167,7 @@ autoScroll({
 });`,
 };
 
-const DefaultDemo = () => {
-  const list = useDynamicList();
+const DefaultDemo = ({ data }) => {
   useEffect(
     () =>
       autoScroll({
@@ -52,36 +178,24 @@ const DefaultDemo = () => {
   return (
     <div className="panel">
       <h3>Default (auto scroll always)</h3>
-      <div className="list-container" id="default-list-container">
-        {list.map((id) => (
-          <div className="item" key={id}>
-            {id}
-          </div>
-        ))}
-        {/* <div>
-          {list.map((id) => (
-            <div className="item" key={id}>
-              {id}
-            </div>
-          ))}
-        </div> */}
-        {/* <div
-          className="item"
-          style={{
-            height: list.length * 100,
-          }}
+      <Phone>
+        <div
+          className="list-container artboard phone-1"
+          id="default-list-container"
         >
-          Height Update [{list.length * 100}px]
-        </div> */}
-        <div className="loading">LOADING...</div>
+          <ChatList data={data} />
+        </div>
+      </Phone>
+      <div className="code-block mt-4">
+        <pre>
+          <code>{codes.default}</code>
+        </pre>
       </div>
-      <code>{codes.default}</code>
     </div>
   );
 };
 
-const EscapeScrollUpDemo = () => {
-  const list = useDynamicList();
+const EscapeScrollUpDemo = ({ data }) => {
   useEffect(
     () =>
       autoScroll({
@@ -93,24 +207,29 @@ const EscapeScrollUpDemo = () => {
   return (
     <div className="panel">
       <h3>Stop Auto Scroll When User Scroll Up</h3>
-      <div className="list-container" id="escape-scroll-up-list-container">
-        {list.map((id) => (
-          <div className="item" key={id}>
-            {id}
-          </div>
-        ))}
-        <div className="loading">LOADING...</div>
+      <Phone>
+        <div
+          className="list-container artboard phone-1"
+          id="escape-scroll-up-list-container"
+        >
+          <ChatList data={data} />
+        </div>
+      </Phone>
+      <div className="code-block mt-4">
+        <pre>
+          <code>{codes.escapeScrollUp}</code>
+        </pre>
       </div>
-      <code>{codes.escapeScrollUp}</code>
     </div>
   );
 };
 
 function App() {
+  const data = useChatListStream();
   return (
     <div className="grid-table">
-      <DefaultDemo />
-      <EscapeScrollUpDemo />
+      <DefaultDemo data={data} />
+      <EscapeScrollUpDemo data={data} />
     </div>
   );
 }
