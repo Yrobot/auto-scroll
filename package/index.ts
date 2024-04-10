@@ -49,13 +49,24 @@ export const escapeWhenUpPlugin: Plugin<{
 }> = ({ threshold = 24, throttleTime = 100 } = {}) => {
   const context: Context = {};
   let isEscape = false;
+  let lastScrollTop = -Infinity;
   const [onScroll] = throttle((evt: Event) => {
     const target = evt.target as Element;
-    const scrollUpDistance =
-      target.scrollHeight - target.scrollTop - target.clientHeight;
-    isEscape = scrollUpDistance > threshold;
+    // when isEscape=false and user scroll up, escape auto scroll
+    if (!isEscape && target.scrollTop < lastScrollTop) {
+      isEscape = true;
+    }
+    // when isEscape=true and user scroll down to $threshold, active auto scroll
+    if (
+      isEscape &&
+      target.scrollHeight - target.scrollTop - target.clientHeight <= threshold
+    ) {
+      isEscape = false;
+    }
+    lastScrollTop = target.scrollTop;
   }, throttleTime);
   context.onMount = (elm) => {
+    lastScrollTop = elm.scrollTop;
     elm.addEventListener("scroll", onScroll);
   };
   context.onUnmount = (elm) => {
@@ -109,7 +120,7 @@ export default function autoScroll({
       // console.log("scrollHook", container.scrollHeight - offset);
       container.scrollTo({
         top: container.scrollHeight - offset,
-        behavior: "smooth",
+        // behavior: "smooth", // will effect escapeWhenUpPlugin user scroll up detection
       });
     });
     return true;
