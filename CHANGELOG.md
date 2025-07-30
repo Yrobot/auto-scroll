@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/Yrobot/auto-scroll/compare/v3.0.1...v3.1.0) (2025-07-30)
+
+
+### Features
+
+* support pass container element directly ([6b45424](https://github.com/Yrobot/auto-scroll/commit/6b45424ae440ce68d6980ae19a2ea33efe9451a5))
+
 ## [3.0.1](https://github.com/Yrobot/auto-scroll/compare/v3.0.0...v3.0.1) (2024-04-10)
 
 
