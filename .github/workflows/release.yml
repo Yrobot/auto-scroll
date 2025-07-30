@@ -43,7 +43,7 @@ jobs:
           yarn run build:package
           npx semantic-release -b release
         env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.RELEASE_MPN_TOKEN }}
           GIT_AUTHOR_NAME: "@release-bot"
           GIT_COMMITTER_NAME: "@release-bot"
@@ -56,9 +56,9 @@ jobs:
           from_branch: master
           target_branch: release
           message: version release
-          github_token: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Git push branch master
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: master
