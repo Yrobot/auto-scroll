@@ -5,8 +5,35 @@ import autoScroll, { escapeWhenUpPlugin } from "../package/index.ts";
 
 import "./index.css";
 
+function PrismImport() {
+  return (
+    <>
+      <link
+        href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism.min.css"
+        rel="stylesheet"
+      />
+      <script
+        defer
+        src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js"
+      ></script>
+      <script
+        defer
+        src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-javascript.min.js"
+      ></script>
+    </>
+  );
+}
+
+const JsCodeBox = ({ code, className = "" }) => (
+  <div className={"w-full overflow-x-scroll select-text " + className}>
+    <pre className="language-javascript">
+      <code className="language-javascript">{code}</code>
+    </pre>
+  </div>
+);
+
 const Phone = ({ children }) => (
-  <div className="mockup-phone">
+  <div className="mockup-phone select-none">
     <div className="camera"></div>
     <div className="display bg-base-200">{children}</div>
   </div>
@@ -158,7 +185,11 @@ const ChatList = ({
 const codes = {
   default: `import autoScroll from "@yrobot/auto-scroll";
 
-autoScroll({ selector: "#scroll-container-id" });`,
+autoScroll({ 
+  selector: "#scroll-container-id",
+  // container: document.getElementById("default-list-container") // Or you could pass the container element directly
+});
+`,
   escapeScrollUp: `import autoScroll, { escapeWhenUpPlugin } from "@yrobot/auto-scroll";
 
 autoScroll({
@@ -171,7 +202,8 @@ const DefaultDemo = ({ data }) => {
   useEffect(
     () =>
       autoScroll({
-        selector: "#default-list-container",
+        // selector: "#default-list-container",
+        container: document.getElementById("default-list-container"),
       }),
     []
   );
@@ -186,11 +218,7 @@ const DefaultDemo = ({ data }) => {
           <ChatList data={data} />
         </div>
       </Phone>
-      <div className="code-block mt-4">
-        <pre>
-          <code>{codes.default}</code>
-        </pre>
-      </div>
+      <JsCodeBox className="mt-4" code={codes.default} />
     </div>
   );
 };
@@ -215,11 +243,7 @@ const EscapeScrollUpDemo = ({ data }) => {
           <ChatList data={data} />
         </div>
       </Phone>
-      <div className="code-block mt-4">
-        <pre>
-          <code>{codes.escapeScrollUp}</code>
-        </pre>
-      </div>
+      <JsCodeBox className="mt-4" code={codes.escapeScrollUp} />
     </div>
   );
 };
@@ -230,6 +254,7 @@ function App() {
     <div className="grid-table">
       <DefaultDemo data={data} />
       <EscapeScrollUpDemo data={data} />
+      <PrismImport />
     </div>
   );
 }

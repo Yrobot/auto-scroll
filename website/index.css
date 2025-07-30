@@ -13,7 +13,7 @@
 
 @layer components {
   .panel {
-    @apply w-[400px] flex flex-col items-center justify-start;
+    @apply w-[540px] flex flex-col items-center justify-start;
   }
   .list-container {
     @apply overflow-scroll p-2 pt-6;
@@ -23,15 +23,5 @@
   }
   .grid-table {
     @apply grid grid-cols-[1fr_1fr] gap-16;
-  }
-  .code-block {
-    @apply p-3 rounded-lg;
-    --tw-bg-opacity: 1;
-    background-color: var(--fallback-n, oklch(var(--n) / var(--tw-bg-opacity)));
-    --tw-text-opacity: 1;
-    color: var(--fallback-nc, oklch(var(--nc) / var(--tw-text-opacity)));
-  }
-  .code-block code {
-    @apply whitespace-pre-wrap;
   }
 }

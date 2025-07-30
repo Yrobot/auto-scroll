@@ -91,20 +91,26 @@ export const escapeWhenUpPlugin: Plugin<{
  * @example autoScroll({ selector: "#scroll-container-id", plugins: [escapeWhenUpPlugin()] })
  */
 export default function autoScroll({
-  selector,
   throttleTime = 100,
   plugins = [],
   offset = 0,
-}: {
-  selector: string;
+  ...res
+}: (
+  | {
+      selector: string;
+    }
+  | {
+      container: HTMLElement | null;
+    }
+) & {
   throttleTime?: number;
   plugins?: ReturnType<Plugin>[];
   offset?: number;
 }): unObserverCallback {
-  const container = document.querySelector(selector);
+  const container =
+    "container" in res ? res.container : document.querySelector(res.selector);
 
-  if (container === null)
-    throw new Error(`Element not found with selector [${selector}]`);
+  if (container === null) throw new Error(`Container element not found`);
 
   // plugins onMount
   const mountReturnFuncList = plugins
