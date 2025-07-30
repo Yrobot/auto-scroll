@@ -25,7 +25,10 @@ yarn add @yrobot/auto-scroll
 
 ```ts
 import autoScroll from "@yrobot/auto-scroll";
-autoScroll({ selector: "#scroll-container-id" });
+autoScroll({
+  selector: "#scroll-container-id",
+  // container: document.getElementById("default-list-container") // Or you could pass the container element directly
+});
 ```
 
 ## script - iife
@@ -33,7 +36,10 @@ autoScroll({ selector: "#scroll-container-id" });
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@yrobot/auto-scroll/build/index.iife.js"></script>
 <script>
-  autoScroll.default({ selector: "#scroll-container-id" });
+  autoScroll.default({
+    selector: "#scroll-container-id",
+    // container: document.getElementById("default-list-container") // Or you could pass the container element directly
+  });
 </script>
 ```
 

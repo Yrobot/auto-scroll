@@ -12,14 +12,8 @@ function PrismImport() {
         href="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/themes/prism.min.css"
         rel="stylesheet"
       />
-      <script
-        defer
-        src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js"
-      ></script>
-      <script
-        defer
-        src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-javascript.min.js"
-      ></script>
+      <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-javascript.min.js"></script>
     </>
   );
 }
