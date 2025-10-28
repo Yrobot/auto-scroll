@@ -19,17 +19,61 @@ function PrismImport() {
 }
 
 const JsCodeBox = ({ code, className = "" }) => (
-  <div className={"w-full overflow-x-scroll select-text " + className}>
+  <div className={"w-full overflow-x-auto select-text  " + className}>
     <pre className="language-javascript">
       <code className="language-javascript">{code}</code>
     </pre>
   </div>
 );
 
+const Navbar = ({ title = "AI Assistant" }) => (
+  <div className="navbar bg-base-300 min-h-[48px] px-2 pt-7 flex-none">
+    <div className="flex-1">
+      <button className="btn btn-ghost btn-sm btn-circle">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      </button>
+      <span className="text-sm font-semibold ml-2">{title}</span>
+    </div>
+    <div className="flex-none">
+      <button className="btn btn-ghost btn-sm btn-circle">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+);
+
 const Phone = ({ children }) => (
   <div className="mockup-phone select-none">
     <div className="camera"></div>
-    <div className="display bg-base-200">{children}</div>
+    <div className="display bg-base-200 flex flex-col h-[640px]">
+      {children}
+    </div>
   </div>
 );
 
@@ -42,35 +86,62 @@ const mockData = [
   {
     from: Type.User,
     id: "001",
-    message: "Hello, I am building a website for AI dialogue",
+    message: "Hi! I'm building a chat interface for my AI app",
   },
   {
     from: Type.AI,
     id: "002",
     message:
-      "Okay, that sounds like an interesting project! What difficulties did you encounter in setting up the AI dialogue website?",
+      "Hello! That sounds exciting. What kind of features are you working on?",
   },
   {
     from: Type.User,
     id: "003",
     message:
-      "When I was building the conversation list, I found that the page would not automatically scroll to the latest position of the conversation. When I talk to the AI, a better experience is that the page can automatically scroll to the bottom so that I can view the latest news.",
+      "I'm struggling with auto-scrolling. When new messages arrive, the chat doesn't scroll down automatically. Users have to manually scroll to see the latest responses.",
   },
   {
     from: Type.AI,
     id: "004",
     message:
-      "Ah I see, that's a common issue with building chat/dialogue interfaces. Automatically scrolling to the latest message in the conversation is an important feature for providing a smooth and intuitive user experience. You can use the `@yrobot/auto-scroll` plugin, which can help you solve this problem very well, and it is developed using native js and adapts to all frameworks.",
+      "I understand - auto-scrolling is crucial for chat UX. There are a few considerations:\n\n1. Should it always scroll, or pause when users read history?\n2. How to handle rapid message updates?\n3. Smooth scrolling vs instant jump?\n\nHave you looked into specialized libraries for this?",
   },
-  ...[...Array(50)].map((_, i) => ({
+  {
+    from: Type.User,
+    id: "005",
+    message:
+      "Not really. I tried implementing it myself but it's tricky to get right, especially handling user scroll behavior.",
+  },
+  {
     from: Type.AI,
-    id: `00${5 + i}`,
-    message: "Let's GOGOGOGOGOGOGOGOGO!!!",
+    id: "006",
+    message:
+      "You might want to check out `@yrobot/auto-scroll`. It's a lightweight solution that:\n\n• Works with any framework (vanilla JS, React, Vue, etc.)\n• Handles edge cases automatically\n• Includes plugins like 'escape when scrolling up'\n• Very simple API\n\nWould you like to see how to implement it?",
+  },
+  ...[...Array(30)].map((_, i) => ({
+    from: Type.AI,
+    id: `00${7 + i}`,
+    message: `Step ${i + 1}: ${
+      [
+        "Install the package via npm or yarn",
+        "Import it into your project",
+        "Configure with your container selector",
+        "Add optional plugins if needed",
+        "Test with streaming messages",
+        "Adjust settings based on UX feedback",
+      ][i % 6]
+    }...`,
   })),
   {
     from: Type.User,
+    id: "998",
+    message: "This is exactly what I needed! The documentation is clear too.",
+  },
+  {
+    from: Type.AI,
     id: "999",
-    message: "Ok, I will try it out. Thank you for your help!",
+    message:
+      "Glad I could help! Feel free to ask if you have any questions during implementation. Good luck with your project! 🚀",
   },
 ];
 
@@ -205,8 +276,9 @@ const DefaultDemo = ({ data }) => {
     <div className="panel">
       <h3>Default (auto scroll always)</h3>
       <Phone>
+        <Navbar title="Chat Demo" />
         <div
-          className="list-container artboard phone-1"
+          className="list-container artboard phone-1 flex-1 overflow-y-auto"
           id="default-list-container"
         >
           <ChatList data={data} />
@@ -230,8 +302,9 @@ const EscapeScrollUpDemo = ({ data }) => {
     <div className="panel">
       <h3>Stop Auto Scroll When User Scroll Up</h3>
       <Phone>
+        <Navbar title="Smart Scroll" />
         <div
-          className="list-container artboard phone-1"
+          className="list-container artboard phone-1 flex-1 overflow-y-auto"
           id="escape-scroll-up-list-container"
         >
           <ChatList data={data} />

@@ -13,15 +13,15 @@
 
 @layer components {
   .panel {
-    @apply w-[540px] flex flex-col items-center justify-start;
+    @apply xl:w-[540px] flex flex-col items-center justify-start overflow-auto;
   }
   .list-container {
-    @apply overflow-scroll p-2 pt-6;
+    @apply p-2 pt-6;
   }
   .item {
     @apply flex-none w-full h-[100px] flex justify-center items-center bg-[black] text-white rounded-lg;
   }
   .grid-table {
-    @apply grid grid-cols-[1fr_1fr] gap-16;
+    @apply grid grid-cols-[1fr_1fr] gap-6 xl:gap-16;
   }
 }

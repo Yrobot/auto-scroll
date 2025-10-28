@@ -8,53 +8,101 @@
   <a href="https://github.com/Yrobot/auto-scroll">@yrobot/auto-scroll</a>
 </h2>
 <p align="center">
- This is a tool which makes scroll-container auto scroll to the bottom easy.
+ A lightweight tool to auto-scroll content on your website.
 </p>
 <p align="center">
   <a href="https://www.npmjs.com/package/@yrobot/auto-scroll"><img src="https://img.shields.io/npm/v/@yrobot/auto-scroll.svg" alt="npm package"></a>
+  <a href="https://www.npmjs.com/package/@yrobot/auto-scroll"><img src="https://img.shields.io/npm/dm/@yrobot/auto-scroll.svg" alt="npm downloads"></a>
+  <a href="https://bundlephobia.com/package/@yrobot/auto-scroll"><img src="https://img.shields.io/bundlephobia/minzip/@yrobot/auto-scroll" alt="bundle size"></a>
+  <a href="https://github.com/Yrobot/auto-scroll/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/@yrobot/auto-scroll.svg" alt="license"></a>
+</p>
+<p align="center">
+  <a href="https://yrobot.github.io/auto-scroll">🚀 Live Demo</a>
 </p>
 <br/>
 
-# How to use
+<br/>
+
+## 📖 Table of Contents
+
+- [Showcase](#showcase)
+- [Installation](#installation)
+  - [npm](#npm)
+  - [CDN (IIFE)](#cdn-iife)
+- [Features](#features)
+- [Built-in Plugins](#built-in-plugins)
+- [License](#license)
+- [Changelog](#changelog)
+
+---
+
+# Showcase
+
+## Auto-scroll for AI chat interfaces
+
+Perfect for AI chat pages - automatically scrolls to bottom when new messages arrive.
+
+[![demo](/readme/demo.gif)](https://yrobot.github.io/auto-scroll)
+
+---
+
+# Installation
 
 ## npm
 
 ```bash
-yarn add @yrobot/auto-scroll
+npm install @yrobot/auto-scroll
 ```
+
+**Usage:**
 
 ```ts
 import autoScroll from "@yrobot/auto-scroll";
+
 autoScroll({
   selector: "#scroll-container-id",
-  // container: document.getElementById("default-list-container") // Or you could pass the container element directly
+  // OR: pass the container element directly
+  // container: document.getElementById("scroll-container-id")
 });
 ```
 
-## script - iife
+## CDN (IIFE)
+
+For usage without a build system:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@yrobot/auto-scroll/build/index.iife.js"></script>
 <script>
   autoScroll.default({
     selector: "#scroll-container-id",
-    // container: document.getElementById("default-list-container") // Or you could pass the container element directly
+    // OR: pass the container element directly
+    // container: document.getElementById("scroll-container-id")
   });
 </script>
 ```
 
-# Why
+---
 
-## Handle Several Situations
+# Features
 
-- [✓] The subtree children list length increase
-- [✓] The direct child element height increase
+## ✨ Handles Multiple Scroll Scenarios
 
-## Pack Up Useful Utilities Logic
+- ✅ **Dynamic content additions** - Automatically scrolls when child elements are added to the container
+- ✅ **Growing content** - Automatically scrolls when child element height increases (e.g., streaming text in chat interfaces)
 
-### Stop auto scroll when user scroll up
+---
 
-> es
+# Built-in Plugins
+
+> 🎁 Pre-built plugins are ready to use out of the box - no configuration needed!
+
+## `escapeWhenUpPlugin`
+
+**What it does:** Pauses auto-scrolling when the user manually scrolls up to read previous content.
+
+**Perfect for:** Chat interfaces where users may want to review conversation history without constant interruption.
+
+### ES Module
 
 ```ts
 import autoScroll, { escapeWhenUpPlugin } from "@yrobot/auto-scroll";
@@ -65,13 +113,15 @@ autoScroll({
 });
 ```
 
-> iife
+### IIFE
 
-```ts
-autoScroll.default({
-  selector: "#scroll-container-id",
-  plugins: [autoScroll.escapeWhenUpPlugin()],
-});
+```html
+<script>
+  autoScroll.default({
+    selector: "#scroll-container-id",
+    plugins: [autoScroll.escapeWhenUpPlugin()],
+  });
+</script>
 ```
 
 <!-- ## Customize plugins
@@ -87,3 +137,15 @@ const myPlugin: Plugin<{ name: string }> = ({ name }) => ({
 ```
 
 the plugin should return the an object includes `escapeHook`, `onMount`, `onUnmount` functions. -->
+
+---
+
+# License
+
+[MIT](./LICENSE)
+
+---
+
+# Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md) for release history.
